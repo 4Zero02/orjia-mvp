@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Evento {
+  id         Int       @id @default(autoincrement())
+  nome       String
+  dataInicio DateTime
+  dataFinal  DateTime
+  ano        Int
+  status     String
+  torneios   Torneio[]
+}
+
+model Torneio {
+  id        Int         @id @default(autoincrement())
+  nome      String
+  descricao String?
+  eventoId  Int
+  evento    Evento      @relation(fields: [eventoId], references: [id])
+  partidas  Partida[]
+  rankings  Ranking[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Pontuacao Pontuacao[]
+}
+
+model Partida {
+  id          Int      @id @default(autoincrement())
+  numero      Int?
+  atleticaAId Int
+  atleticaBId Int
+  placarA     Int?
+  placarB     Int?
+  torneioId   Int
+  data        DateTime
+  local       String?
+  torneio     Torneio  @relation(fields: [torneioId], references: [id])
+  atleticaA   Atletica @relation("PartidasComoA", fields: [atleticaAId], references: [id])
+  atleticaB   Atletica @relation("PartidasComoB", fields: [atleticaBId], references: [id])
+}
+
+model Atletica {
+  id           Int           @id @default(autoincrement())
+  nome         String
+  sigla        String?
+  email        String?
+  curso        String?
+  instagram    String?
+  twitter      String?
+  logo         String?
+  pontuacoes   Pontuacao[]
+  rankingItems RankingItem[]
+  partidasA    Partida[]     @relation("PartidasComoA")
+  partidasB    Partida[]     @relation("PartidasComoB")
+}
+
+model Pontuacao {
+  id         Int      @id @default(autoincrement())
+  pontos     Int
+  atleticaId Int
+  torneioId  Int?
+  atletica   Atletica @relation(fields: [atleticaId], references: [id])
+  torneio    Torneio? @relation(fields: [torneioId], references: [id])
+}
+
+model Ranking {
+  id        Int           @id @default(autoincrement())
+  torneioId Int
+  torneio   Torneio       @relation(fields: [torneioId], references: [id])
+  items     RankingItem[]
+}
+
+model RankingItem {
+  id         Int      @id @default(autoincrement())
+  rankingId  Int
+  atleticaId Int
+  posicao    Int
+  pontos     Int      @default(0)
+  ranking    Ranking  @relation(fields: [rankingId], references: [id])
+  atletica   Atletica @relation(fields: [atleticaId], references: [id])
+}
