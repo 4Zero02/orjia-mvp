@@ -29,17 +29,17 @@ export function Header() {
                         </NavigationMenuItem>
                         <NavigationMenuItem>
                             <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link href="/eventos">Torneios</Link>
+                                <Link href="/torneios">Torneios</Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                         <NavigationMenuItem >
                             <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link href="/eventos">Atléticas</Link>
+                                <Link href="/atleticas">Atléticas</Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                         <NavigationMenuItem>
                             <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link href="/eventos">Documentação</Link>
+                                <Link href="/documentacao">Documentação</Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                     </NavigationMenuList>
