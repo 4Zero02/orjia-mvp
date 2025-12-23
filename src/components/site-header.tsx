@@ -15,7 +15,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2">
           <Button variant="default" asChild size="sm" className="hidden sm:flex">
             <a
-              href="#Sair"
+              href="/"
               rel="noopener noreferrer"
               className="dark:text-foreground"
             >

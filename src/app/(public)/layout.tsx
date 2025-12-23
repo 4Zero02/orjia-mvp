@@ -1,6 +1,10 @@
-import "@/app/globals.css";
-import { Header } from "@/components/header";
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
+import { Navbar } from "@/components/navbar"
+import "../globals.css"
 
+const _geist = Geist({ subsets: ["latin"] })
+const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata = {
   title: "ORJIA | LAUFAC",
   description: "Plataforma oficial da Liga das Atléticas da UFAC",
@@ -25,14 +29,14 @@ export const metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-br">
-      <body className={`antialiased`}>
-        <Header />
+    <html lang="pt-BR">
+      <body className={`font-sans antialiased`}>
+        <Navbar />
         {children}
       </body>
     </html>
-  );
+  )
 }
