@@ -22,9 +22,13 @@ export interface TournamentRanking {
   position: number
   team: Team
   points: number
-  wins: number
-  losses: number
-  draws: number
+}
+
+export interface TournamentResult {
+  tournamentId: string
+  teamId: string
+  position: number // SEM empate
+  points: number
 }
 
 export interface Tournament {
@@ -39,9 +43,6 @@ export interface EventRanking {
   position: number
   team: Team
   totalPoints: number
-  golds: number
-  silvers: number
-  bronzes: number
 }
 
 export interface Event {
@@ -169,48 +170,48 @@ export const matches: Match[] = [
 // Mock Tournament Rankings
 export const tournamentRankings: Record<string, TournamentRanking[]> = {
   "1": [
-    { position: 1, team: teams[0], points: 15, wins: 5, losses: 0, draws: 0 },
-    { position: 2, team: teams[2], points: 13, wins: 4, losses: 0, draws: 1 },
-    { position: 3, team: teams[1], points: 10, wins: 3, losses: 1, draws: 1 },
-    { position: 4, team: teams[3], points: 8, wins: 2, losses: 1, draws: 2 },
-    { position: 5, team: teams[4], points: 6, wins: 2, losses: 3, draws: 0 },
-    { position: 6, team: teams[5], points: 4, wins: 1, losses: 3, draws: 1 },
-    { position: 7, team: teams[6], points: 3, wins: 1, losses: 4, draws: 0 },
-    { position: 8, team: teams[7], points: 1, wins: 0, losses: 4, draws: 1 },
+    { position: 1, team: teams[0], points: 15 },
+    { position: 2, team: teams[2], points: 13 },
+    { position: 3, team: teams[1], points: 10 },
+    { position: 4, team: teams[3], points: 8 },
+    { position: 5, team: teams[4], points: 6 },
+    { position: 6, team: teams[5], points: 4 },
+    { position: 7, team: teams[6], points: 3 },
+    { position: 8, team: teams[7], points: 1 },
   ],
   "2": [
-    { position: 1, team: teams[4], points: 12, wins: 6, losses: 0, draws: 0 },
-    { position: 2, team: teams[7], points: 10, wins: 5, losses: 1, draws: 0 },
-    { position: 3, team: teams[5], points: 8, wins: 4, losses: 2, draws: 0 },
-    { position: 4, team: teams[6], points: 6, wins: 3, losses: 3, draws: 0 },
-    { position: 5, team: teams[0], points: 4, wins: 2, losses: 4, draws: 0 },
-    { position: 6, team: teams[1], points: 4, wins: 2, losses: 4, draws: 0 },
-    { position: 7, team: teams[2], points: 2, wins: 1, losses: 5, draws: 0 },
-    { position: 8, team: teams[3], points: 0, wins: 0, losses: 6, draws: 0 },
+    { position: 1, team: teams[4], points: 12 },
+    { position: 2, team: teams[7], points: 10 },
+    { position: 3, team: teams[5], points: 8 },
+    { position: 4, team: teams[6], points: 6 },
+    { position: 5, team: teams[0], points: 4 },
+    { position: 6, team: teams[1], points: 4 },
+    { position: 7, team: teams[2], points: 2 },
+    { position: 8, team: teams[3], points: 0 },
   ],
 }
 
 // Mock Event Rankings
 export const eventRankings: Record<string, EventRanking[]> = {
   "1": [
-    { position: 1, team: teams[0], totalPoints: 450, golds: 8, silvers: 5, bronzes: 3 },
-    { position: 2, team: teams[2], totalPoints: 420, golds: 7, silvers: 6, bronzes: 4 },
-    { position: 3, team: teams[4], totalPoints: 385, golds: 6, silvers: 5, bronzes: 6 },
-    { position: 4, team: teams[1], totalPoints: 360, golds: 5, silvers: 7, bronzes: 5 },
-    { position: 5, team: teams[3], totalPoints: 340, golds: 4, silvers: 6, bronzes: 7 },
-    { position: 6, team: teams[7], totalPoints: 310, golds: 3, silvers: 5, bronzes: 6 },
-    { position: 7, team: teams[5], totalPoints: 285, golds: 2, silvers: 4, bronzes: 8 },
-    { position: 8, team: teams[6], totalPoints: 260, golds: 1, silvers: 3, bronzes: 5 },
+    { position: 1, team: teams[0], totalPoints: 450 },
+    { position: 2, team: teams[2], totalPoints: 420 },
+    { position: 3, team: teams[4], totalPoints: 385 },
+    { position: 4, team: teams[1], totalPoints: 360 },
+    { position: 5, team: teams[3], totalPoints: 340 },
+    { position: 6, team: teams[7], totalPoints: 310 },
+    { position: 7, team: teams[5], totalPoints: 285 },
+    { position: 8, team: teams[6], totalPoints: 260 },
   ],
   "2": [
-    { position: 1, team: teams[2], totalPoints: 480, golds: 9, silvers: 4, bronzes: 2 },
-    { position: 2, team: teams[0], totalPoints: 445, golds: 7, silvers: 7, bronzes: 3 },
-    { position: 3, team: teams[1], totalPoints: 410, golds: 6, silvers: 6, bronzes: 5 },
-    { position: 4, team: teams[4], totalPoints: 390, golds: 5, silvers: 5, bronzes: 6 },
-    { position: 5, team: teams[3], totalPoints: 365, golds: 4, silvers: 6, bronzes: 6 },
-    { position: 6, team: teams[5], totalPoints: 330, golds: 3, silvers: 4, bronzes: 7 },
-    { position: 7, team: teams[7], totalPoints: 295, golds: 2, silvers: 3, bronzes: 6 },
-    { position: 8, team: teams[6], totalPoints: 270, golds: 1, silvers: 2, bronzes: 4 },
+    { position: 1, team: teams[2], totalPoints: 480 },
+    { position: 2, team: teams[0], totalPoints: 445 },
+    { position: 3, team: teams[1], totalPoints: 410 },
+    { position: 4, team: teams[4], totalPoints: 390 },
+    { position: 5, team: teams[3], totalPoints: 365 },
+    { position: 6, team: teams[5], totalPoints: 330 },
+    { position: 7, team: teams[7], totalPoints: 295 },
+    { position: 8, team: teams[6], totalPoints: 270 },
   ],
 }
 

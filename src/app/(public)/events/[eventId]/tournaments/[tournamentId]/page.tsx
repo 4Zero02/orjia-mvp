@@ -167,9 +167,6 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                             <TableCell>
                                                 <Link href={`/teams/${rank.team.id}`} className="hover:text-primary transition-colors">
                                                     <div className="font-medium">{rank.team.shortName}</div>
-                                                    <div className="text-xs text-muted-foreground">
-                                                        {rank.wins}V {rank.draws}E {rank.losses}D
-                                                    </div>
                                                 </Link>
                                             </TableCell>
                                             <TableCell className="text-right font-bold">{rank.points}</TableCell>

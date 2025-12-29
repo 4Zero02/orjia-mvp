@@ -75,26 +75,6 @@ export default function HomePage() {
                         >
                           {rank.team.name}
                         </Link>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge
-                            variant="outline"
-                            className="text-xs bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border-yellow-500/20"
-                          >
-                            🥇 {rank.golds}
-                          </Badge>
-                          <Badge
-                            variant="outline"
-                            className="text-xs bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-500/20"
-                          >
-                            🥈 {rank.silvers}
-                          </Badge>
-                          <Badge
-                            variant="outline"
-                            className="text-xs bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20"
-                          >
-                            🥉 {rank.bronzes}
-                          </Badge>
-                        </div>
                       </div>
                     </div>
                     <div className="text-right">
@@ -127,7 +107,7 @@ export default function HomePage() {
                 {eventTournaments.map((tournament) => (
                   <Link
                     key={tournament.id}
-                    href={`/tournaments/${tournament.id}`}
+                    href={`/events/${featuredEvent.id}/tournaments/${tournament.id}`}
                     className="block p-4 rounded-lg border bg-card hover:shadow-lg transition-all group"
                   >
                     <div className="flex items-center justify-between">

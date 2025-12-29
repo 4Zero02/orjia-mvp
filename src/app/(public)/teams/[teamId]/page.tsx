@@ -88,7 +88,7 @@ export default async function TeamDetailPage({ params }: TeamDetailPageProps) {
                                 {tournamentPerformance.map(({ tournament, ranking }) => {
                                     const event = events.find((e) => e.id === tournament.eventId)
                                     return (
-                                        <Link key={tournament.id} href={`/tournaments/${tournament.id}`}>
+                                        <Link key={tournament.id} href={`/events/${tournament.eventId}/tournaments/${tournament.id}`}>
                                             <div className="p-4 rounded-lg border bg-card hover:shadow-md transition-all hover:border-primary/50">
                                                 <div className="flex items-start justify-between mb-2">
                                                     <div>
@@ -101,9 +101,6 @@ export default async function TeamDetailPage({ params }: TeamDetailPageProps) {
                                                     <div>
                                                         <span className="font-bold">{ranking!.points}</span>
                                                         <span className="text-muted-foreground"> pts</span>
-                                                    </div>
-                                                    <div className="text-muted-foreground">
-                                                        {ranking!.wins}V {ranking!.draws}E {ranking!.losses}D
                                                     </div>
                                                 </div>
                                             </div>
@@ -143,26 +140,6 @@ export default async function TeamDetailPage({ params }: TeamDetailPageProps) {
                                                 <div className="text-sm">
                                                     <span className="font-bold">{ranking!.totalPoints}</span>
                                                     <span className="text-muted-foreground"> pontos</span>
-                                                </div>
-                                                <div className="flex gap-2 text-xs">
-                                                    <Badge
-                                                        variant="outline"
-                                                        className="bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border-yellow-500/20"
-                                                    >
-                                                        🥇 {ranking!.golds}
-                                                    </Badge>
-                                                    <Badge
-                                                        variant="outline"
-                                                        className="bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-500/20"
-                                                    >
-                                                        🥈 {ranking!.silvers}
-                                                    </Badge>
-                                                    <Badge
-                                                        variant="outline"
-                                                        className="bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20"
-                                                    >
-                                                        🥉 {ranking!.bronzes}
-                                                    </Badge>
                                                 </div>
                                             </div>
                                         </div>
