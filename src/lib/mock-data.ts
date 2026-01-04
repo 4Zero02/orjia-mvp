@@ -24,11 +24,14 @@ export interface TournamentRanking {
   points: number
 }
 
-export interface TournamentResult {
-  tournamentId: string
-  teamId: string
-  position: number // SEM empate
+// Ranking top 8 de cada torneio
+export interface TournamentRankingTest {
+  tournamentId: number
+  teamId: number | null  // null = posição ainda não preenchida
+  position: number        // 1 a 8
   points: number
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface Tournament {
@@ -39,7 +42,9 @@ export interface Tournament {
   status: "upcoming" | "ongoing" | "finished"
 }
 
+// vai deixar de ser usado
 export interface EventRanking {
+  // eventId: string
   position: number
   team: Team
   totalPoints: number

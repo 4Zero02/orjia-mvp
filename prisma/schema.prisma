@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum StatusTime {
+  PLANNING
+  UPCOMING
+  ACTIVE
+  COMPLETED
+  ONGOING
+  FINISHED
+  SCHEDULED
+}
+
+// crie um enum com os rounds para as partidas
+enum MatchRound {
+  PRELIMINAR
+  OITAVAS
+  QUARTAS
+  SEMI
+  TERCEIRO_LUGAR
+  FINAL
+  DESEMPATE_7_8
+  DESEMPATE_5_6
+}
+
+model Event {
+  id          Int          @id @default(autoincrement())
+  name        String
+  year        Int
+  dateStart   DateTime
+  dateEnd     DateTime
+  status      StatusTime       // planning | upcoming | active | completed
+
+  tournaments Tournament[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Tournament {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?
+  status      StatusTime       // upcoming | ongoing | finished
+
+  eventId     Int
+  event       Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  matches     Match[]
+  results     TournamentResult[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Atletica {
+  id        Int      @id @default(autoincrement())
+  name      String
+  acronym   String?
+  course    String?
+  email     String?
+  instagram String?
+  logo      String?
+
+  results     TournamentResult[]
+
+  matchesAsTeam1 Match[] @relation("Team1Matches")
+  matchesAsTeam2 Match[] @relation("Team2Matches")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TournamentResult {
+  id           Int        @id @default(autoincrement())
+  tournamentId Int
+  teamId       Int
+
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  team         Atletica   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  position     Int?       // 1–8 apenas para top 8
+  points       Int        // 20–8 ou 1
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([tournamentId, teamId])
+  @@unique([tournamentId, position])
+  @@index([tournamentId])
+  @@index([teamId])
+}
+
+model Match {
+  id           Int        @id @default(autoincrement())
+  tournamentId Int
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  team1Id      Int?
+  team2Id      Int?
+  team1        Atletica?   @relation("Team1Matches", fields: [team1Id], references: [id])
+  team2        Atletica?   @relation("Team2Matches", fields: [team2Id], references: [id])
+
+  scoreTeam1   Int?
+  scoreTeam2   Int?
+  round        MatchRound
+  status       StatusTime     // scheduled | finished
+  scheduledAt  DateTime
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([tournamentId])
+  @@index([team1Id])
+  @@index([team2Id])
+}
