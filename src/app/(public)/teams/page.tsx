@@ -22,7 +22,7 @@ export default function TeamsPage() {
                     <Link key={team.id} href={`/teams/${team.id}`}>
                         <Card className="h-full hover:shadow-lg transition-all hover:border-primary/50">
                             <CardHeader>
-                                <img src={team.logo} alt={team.name} className="w-16 h-16 object-contain mb-4" />
+                                <img src={team.logo || "/logos/liga.png"} alt={team.name} className="w-16 h-16 object-contain mb-4" />
                                 <div className="absolute top-4 right-4 bg-primary/10 text-primary px-2 py-1 rounded-md text-xs font-semibold">
                                     {team.shortName}
                                 </div>
