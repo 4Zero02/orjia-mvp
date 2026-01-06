@@ -53,4 +53,4 @@ next-env.d.ts
 !.vscode/tasks.json
 .history/
 
-/src/generated/prisma
+/src/app/generated
