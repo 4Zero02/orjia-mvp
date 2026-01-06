@@ -1,13 +1,12 @@
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { events, getEventRanking, getTournamentsByEventId } from "@/lib/mock-data"
 import { StatusBadge } from "@/components/status-badge"
 import { Trophy, Medal, ArrowRight } from "lucide-react"
 
 export default function HomePage() {
-  const featuredEvent = events.find((e) => e.status === "ongoing") || events[0]
+  const featuredEvent = events.find((e) => e.status === "ONGOING") || events[0]
   const eventRanking = getEventRanking(featuredEvent.id).slice(0, 5)
   const eventTournaments = getTournamentsByEventId(featuredEvent.id)
 

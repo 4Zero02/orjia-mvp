@@ -54,3 +54,5 @@ next-env.d.ts
 .history/
 
 /src/app/generated
+/src/app/(public)/test-page
+src/lib/mock-data.ts

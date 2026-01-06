@@ -1,11 +1,13 @@
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { events } from "@/lib/mock-data"
+// import { events } from "@/lib/mock-data"
 import { StatusBadge } from "@/components/status-badge"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Calendar } from "lucide-react"
+import { getEvents } from "@/data/events"
 
-export default function EventsPage() {
+export default async function EventsPage() {
+    const events = await getEvents();
     return (
         <main className="container mx-auto px-4 py-8">
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Eventos" }]} />
@@ -28,13 +30,13 @@ export default function EventsPage() {
                                     <StatusBadge status={event.status} />
                                 </div>
                                 <CardTitle className="text-2xl">{event.name}</CardTitle>
-                                <CardDescription className="text-base">{event.description}</CardDescription>
+                                <CardDescription className="text-base">Descricao do evento</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-sm text-muted-foreground">
                                     <div className="font-medium">
-                                        {new Date(event.startDate).toLocaleDateString("pt-BR", { day: "numeric", month: "long" })} -{" "}
-                                        {new Date(event.endDate).toLocaleDateString("pt-BR", {
+                                        {new Date(event.dateStart).toLocaleDateString("pt-BR", { day: "numeric", month: "long" })} -{" "}
+                                        {new Date(event.dateEnd).toLocaleDateString("pt-BR", {
                                             day: "numeric",
                                             month: "long",
                                             year: "numeric",
