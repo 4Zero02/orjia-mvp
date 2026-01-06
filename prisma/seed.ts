@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { PrismaClient, StatusTime, MatchRound } from '@prisma/client'
+import { PrismaClient, StatusTime, MatchRound } from "@/app/generated/prisma/client";
 import { PrismaPg } from '@prisma/adapter-pg'
 
 
