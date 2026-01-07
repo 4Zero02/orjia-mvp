@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-// import { events } from "@/lib/mock-data"
 import { StatusBadge } from "@/components/status-badge"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Calendar } from "lucide-react"

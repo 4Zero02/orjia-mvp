@@ -2,28 +2,30 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { getEventById, getTournamentsByEventId, getEventRanking } from "@/lib/mock-data"
 import { StatusBadge } from "@/components/status-badge"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Trophy, Calendar, Medal } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+// import { getEventRanking } from "@/lib/mock-data"
+import { getEventById } from "@/data/events"
+import { getTournamentsByEventId } from "@/data/tournaments"
 
 type EventDetailPageProps = {
     params: {
-        eventId: string
+        eventoId: string
     }
 }
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
-    const { eventId } = await params
-    const event = getEventById(eventId)
+    const { eventoId } = await params
+    const event = await getEventById(parseInt(eventoId))
 
     if (!event) {
         notFound()
     }
 
-    const tournaments = getTournamentsByEventId(event.id)
-    const eventRanking = getEventRanking(event.id)
+    const tournaments = await getTournamentsByEventId(event.id)
+    // const eventRanking = getEventRanking(event.id)
 
     return (
         <main className="container mx-auto px-4 py-8">
@@ -41,10 +43,10 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                     <StatusBadge status={event.status} />
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-3 text-balance">{event.name}</h1>
-                <p className="text-lg text-muted-foreground mb-4">{event.description}</p>
+                <p className="text-lg text-muted-foreground mb-4">{event.year}</p>
                 <div className="text-sm text-muted-foreground">
-                    {new Date(event.startDate).toLocaleDateString("pt-BR", { day: "numeric", month: "long" })} -{" "}
-                    {new Date(event.endDate).toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })}
+                    {new Date(event.dateStart).toLocaleDateString("pt-BR", { day: "numeric", month: "long" })} -{" "}
+                    {new Date(event.dateEnd).toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })}
                 </div>
             </div>
 
@@ -67,7 +69,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                                             <CardHeader className="pb-3">
                                                 <div className="flex items-center justify-between mb-2">
                                                     <Badge variant="outline" className="text-xs">
-                                                        {tournament.sport}
+                                                        Modalidade
                                                     </Badge>
                                                     <StatusBadge status={tournament.status} />
                                                 </div>
@@ -102,7 +104,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                                         <TableHead className="text-right">Pts</TableHead>
                                     </TableRow>
                                 </TableHeader>
-                                <TableBody>
+                                {/* <TableBody>
                                     {eventRanking.map((rank) => (
                                         <TableRow key={rank.position}>
                                             <TableCell className="font-bold">{rank.position}</TableCell>
@@ -115,7 +117,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                                             <TableCell className="text-right font-bold">{rank.totalPoints}</TableCell>
                                         </TableRow>
                                     ))}
-                                </TableBody>
+                                </TableBody> */}
                             </Table>
                         </CardContent>
                     </Card>

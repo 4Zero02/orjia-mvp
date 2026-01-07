@@ -2,30 +2,34 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { getTournamentById, getEventById, getMatchesByTournamentId, getTournamentRanking } from "@/lib/mock-data"
 import { StatusBadge } from "@/components/status-badge"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Trophy, Calendar } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+// import { getTournamentById, getEventById, getMatchesByTournamentId, getTournamentRanking } from "@/lib/mock-data"
+import { getTournamentById } from "@/data/tournaments"
+import { getEventById } from "@/data/events"
+import { getMatchesByTournament } from "@/data/matches"
+import { getTournamentResultsByTournament } from "@/data/tournamentResult"
 
 type TournamentDetailPageProps = {
     params: {
-        eventId: string
-        tournamentId: string
+        eventoId: string
+        torneioId: string
     }
 }
 
 export default async function TournamentDetailPage({ params }: TournamentDetailPageProps) {
-    const { tournamentId } = await params
-    const tournament = getTournamentById(tournamentId)
+    const { torneioId } = await params
+    const tournament = await getTournamentById(parseInt(torneioId))
 
     if (!tournament) {
         notFound()
     }
 
-    const event = getEventById(tournament.eventId)
-    const matches = getMatchesByTournamentId(tournament.id)
-    const ranking = getTournamentRanking(tournament.id)
+    const event = await getEventById(tournament.eventId)
+    const matches = await getMatchesByTournament(tournament.id)
+    const ranking = await getTournamentResultsByTournament(tournament.id)
 
     if (!event) {
         notFound()
@@ -57,7 +61,7 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
             {/* Tournament Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
-                    <Badge className="bg-primary/20 text-primary border-primary/30">{tournament.sport}</Badge>
+                    <Badge className="bg-primary/20 text-primary border-primary/30">Modalidade</Badge>
                     <StatusBadge status={tournament.status} />
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-3">{tournament.name}</h1>
@@ -92,43 +96,43 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                                     <div className="flex items-center gap-4 flex-1">
                                                         <div className="flex items-center gap-2 flex-1">
                                                             <Link
-                                                                href={`/teams/${match.teamA.id}`}
+                                                                href={`/teams/${match.team1?.id}`}
                                                                 className="font-medium hover:text-primary transition-colors"
                                                             >
-                                                                <img src={match.teamA.logo} alt={match.teamA.name} className="h-6 w-6 object-contain mr-1 inline-block" />
-                                                                {match.teamA.shortName}
+                                                                <img src={match.team1?.logo ?? undefined} alt={match.team1?.name} className="h-6 w-6 object-contain mr-1 inline-block" />
+                                                                {match.team1?.acronym}
                                                             </Link>
                                                         </div>
                                                         <div className="flex items-center justify-center gap-4">
                                                             <span
                                                                 className={`text-4xl font-bold`}
                                                             >
-                                                                {match.scoreA !== null && <span className="text-xl font-bold">{match.scoreA}</span>}
+                                                                {match.scoreTeam1 !== null && <span className="text-xl font-bold">{match.scoreTeam1}</span>}
                                                             </span>
                                                             <span className="text-2xl mt-3 text-muted-foreground"> - </span>
                                                             <span
-                                                                className={`text-4xl font-bold ${match.scoreB !== null && match.scoreB > (match.scoreA || 0)
+                                                                className={`text-4xl font-bold ${match.scoreTeam2 !== null && match.scoreTeam2 > (match.scoreTeam1 || 0)
                                                                     ? "text-primary"
                                                                     : "text-foreground"
                                                                     }`}
                                                             >
-                                                                {match.scoreB !== null && <span className="text-xl font-bold">{match.scoreB}</span>}
+                                                                {match.scoreTeam2 !== null && <span className="text-xl font-bold">{match.scoreTeam2}</span>}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center gap-2 flex-1 justify-end">
                                                             <Link
-                                                                href={`/teams/${match.teamB.id}`}
+                                                                href={`/teams/${match.team2?.id}`}
                                                                 className="font-medium hover:text-primary transition-colors"
                                                             >
-                                                                {match.teamB.shortName}
-                                                                <img src={match.teamB.logo} alt={match.teamB.name} className="h-6 w-6 object-contain ml-1 inline-block" />
+                                                                {match.team2?.acronym}
+                                                                <img src={match.team2?.logo ?? undefined} alt={match.team2?.name} className="h-6 w-6 object-contain ml-1 inline-block" />
                                                             </Link>
                                                         </div>
                                                     </div>
                                                     <div className="ml-4 text-right">
                                                         <StatusBadge status={match.status} />
                                                         <div className="text-xs text-muted-foreground mt-1">
-                                                            {new Date(match.date).toLocaleDateString("pt-BR")}
+                                                            {new Date(match.scheduledAt).toLocaleDateString("pt-BR")}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -166,7 +170,7 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                             <TableCell className="font-bold">{rank.position}</TableCell>
                                             <TableCell>
                                                 <Link href={`/teams/${rank.team.id}`} className="hover:text-primary transition-colors">
-                                                    <div className="font-medium">{rank.team.shortName}</div>
+                                                    <div className="font-medium">{rank.team.acronym}</div>
                                                 </Link>
                                             </TableCell>
                                             <TableCell className="text-right font-bold">{rank.points}</TableCell>
