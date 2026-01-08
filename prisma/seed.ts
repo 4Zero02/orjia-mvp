@@ -1,21 +1,16 @@
+// prisma/seed.ts
 import 'dotenv/config'
-import { PrismaClient, StatusTime, MatchRound } from "@/app/generated/prisma/client";
-import { PrismaPg } from '@prisma/adapter-pg'
+import prisma from '../src/lib/prisma' // Ajuste o caminho se necessário
+import { StatusTime, MatchRound } from '../src/app/generated/prisma/client'
 
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-})
-
-const prisma = new PrismaClient({
-  adapter,
-});
+// Não precisa criar PrismaClient aqui, usa o que já existe!
 
 async function main() {
   console.log('🌱 Iniciando seed...')
 
   // Limpar dados existentes
   await prisma.match.deleteMany()
+  await prisma.eventResult.deleteMany()
   await prisma.tournamentResult.deleteMany()
   await prisma.tournament.deleteMany()
   await prisma.event.deleteMany()
@@ -478,6 +473,57 @@ async function main() {
 
   console.log('✅ Resultados do Vôlei criados')
 
+  // ============ EVENT RESULTS - EVENTO 2024 ============
+  console.log('📊 Calculando e criando resultados gerais do evento 2024...')
+
+  // Agrupa todos os results por time para o evento 2024
+  const event2024Results = await prisma.tournamentResult.findMany({
+    where: {
+      tournament: {
+        eventId: event2024.id
+      }
+    },
+    include: {
+      team: true
+    }
+  })
+
+  // Calcula pontuação total de cada time no evento
+  const teamPointsMap = new Map<number, { teamId: number, totalPoints: number }>()
+
+  event2024Results.forEach(result => {
+    const current = teamPointsMap.get(result.teamId) || { teamId: result.teamId, totalPoints: 0 }
+    current.totalPoints += result.points
+    teamPointsMap.set(result.teamId, current)
+  })
+
+  // Converte para array e ordena por pontos (decrescente)
+  const teamPointsArray = Array.from(teamPointsMap.values())
+    .sort((a, b) => b.totalPoints - a.totalPoints)
+
+  // Cria EventResult para cada time com sua posição
+  const eventResultsData = teamPointsArray.map((teamPoints, index) => ({
+    eventId: event2024.id,
+    teamId: teamPoints.teamId,
+    position: index + 1,
+    points: teamPoints.totalPoints
+  }))
+
+  await prisma.eventResult.createMany({
+    data: eventResultsData
+  })
+
+  console.log(`✅ ${eventResultsData.length} resultados gerais do evento criados`)
+
+  // Mostra top 5 do evento
+  console.log('\n🏆 Top 5 do Evento 2024:')
+  for (let i = 0; i < Math.min(5, eventResultsData.length); i++) {
+    const result = eventResultsData[i]
+    const atletica = atleticas.find(a => a.id === result.teamId)
+    console.log(`   ${i + 1}º - ${atletica?.acronym}: ${result.points} pontos`)
+  }
+  console.log('')
+
   // ============ TORNEIOS - EVENTO 2025 (FUTURO) ============
   console.log('🏆 Criando torneios do evento 2025...')
 
@@ -530,7 +576,8 @@ async function main() {
   console.log(`🎉 Eventos: 2`)
   console.log(`🏆 Torneios: 4`)
   console.log(`⚽ Partidas: ${await prisma.match.count()}`)
-  console.log(`📊 Resultados: ${await prisma.tournamentResult.count()}`)
+  console.log(`📊 Resultados de Torneios: ${await prisma.tournamentResult.count()}`)
+  console.log(`🏅 Resultados de Eventos: ${await prisma.eventResult.count()}`)
   console.log('─────────────────────────────────')
 }
 

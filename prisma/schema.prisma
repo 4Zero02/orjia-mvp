@@ -38,6 +38,7 @@ model Event {
   status    StatusTime // planning | upcoming | active | completed
 
   tournaments Tournament[]
+  results     EventResult[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -68,7 +69,8 @@ model Atletica {
   instagram String?
   logo      String?
 
-  results TournamentResult[]
+  results      TournamentResult[]
+  eventResults EventResult[]
 
   matchesAsTeam1 Match[] @relation("Team1Matches")
   matchesAsTeam2 Match[] @relation("Team2Matches")
@@ -94,6 +96,26 @@ model TournamentResult {
   @@unique([tournamentId, teamId])
   @@unique([tournamentId, position])
   @@index([tournamentId])
+  @@index([teamId])
+}
+
+model EventResult {
+  id      Int @id @default(autoincrement())
+  eventId Int
+  teamId  Int
+
+  event Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  team  Atletica @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  position Int // pra todos os participantes
+  points   Int // pontucação geral
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([eventId, teamId])
+  @@unique([eventId, position])
+  @@index([eventId])
   @@index([teamId])
 }
 
