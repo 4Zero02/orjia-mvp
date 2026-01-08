@@ -17,9 +17,6 @@ export async function getTournamentResultsByTournament(tournamentId: number) {
         where: {
             tournamentId,
         },
-        include: {
-            team: true,
-        },
         orderBy: {
             position: "asc",
         },
@@ -27,14 +24,14 @@ export async function getTournamentResultsByTournament(tournamentId: number) {
 }
 
 // verificar q porra eh essa
-export async function getTournamentRanking(tournamentId: number) {
-    const results = await getTournamentResultsByTournament(tournamentId);
-    return results.map(result => ({
-        position: result.position,
-        team: result.team,
-        points: result.points,
-    }));
-}
+// export async function getTournamentRanking(tournamentId: number) {
+//     const results = await getTournamentResultsByTournament(tournamentId);
+//     return results.map(result => ({
+//         position: result.position,
+//         team: result.team,
+//         points: result.points,
+//     }));
+// }
 
 export async function getTournamentResultByAtletica(tournamentId: number, teamId: number) {
     return prisma.tournamentResult.findFirst({

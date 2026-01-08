@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma"
 
 export async function getAtleticas() {
     return prisma.atletica.findMany();
@@ -103,4 +103,53 @@ export async function getParticipatedTournaments(atleticaId: number) {
             },
         },
     })
+}
+
+export async function getAtleticaFullPerformance(atleticaId: number) {
+    const [events, tournaments] = await Promise.all([
+        prisma.event.findMany({
+            where: {
+                results: {
+                    some: { teamId: atleticaId }
+                }
+            },
+            include: {
+                results: {
+                    where: { teamId: atleticaId }
+                }
+            }
+        }),
+        
+        prisma.tournament.findMany({
+            where: {
+                results: {
+                    some: { teamId: atleticaId }
+                }
+            },
+            include: {
+                results: {
+                    where: { teamId: atleticaId }
+                },
+                event: {
+                    select: {
+                        id: true,
+                        name: true,
+                        year: true
+                    }
+                }
+            }
+        })
+    ])
+    
+    return {
+        eventPerformance: events.map(event => ({
+            event,
+            ranking: event.results[0]
+        })),
+        
+        tournamentPerformance: tournaments.map(tournament => ({
+            tournament,
+            ranking: tournament.results[0]
+        }))
+    }
 }

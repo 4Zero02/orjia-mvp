@@ -20,7 +20,7 @@ export default async function TeamsPage() {
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {atleticas.map((team) => (
-                    <Link key={team.id} href={`/teams/${team.id}`}>
+                    <Link key={team.id} href={`/atleticas/${team.id}`}>
                         <Card className="h-full hover:shadow-lg transition-all hover:border-primary/50">
                             <CardHeader>
                                 <img src={team.logo || "/logos/liga.png"} alt={team.name} className="w-16 h-16 object-contain mb-4" />

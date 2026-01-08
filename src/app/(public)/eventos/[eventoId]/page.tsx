@@ -6,9 +6,10 @@ import { StatusBadge } from "@/components/status-badge"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Trophy, Calendar, Medal } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-// import { getEventRanking } from "@/lib/mock-data"
 import { getEventById } from "@/data/events"
 import { getTournamentsByEventId } from "@/data/tournaments"
+import { getEventResultsByEvent } from "@/data/eventResult"
+import { parse } from "path"
 
 type EventDetailPageProps = {
     params: {
@@ -19,6 +20,7 @@ type EventDetailPageProps = {
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
     const { eventoId } = await params
     const event = await getEventById(parseInt(eventoId))
+    const eventRanking = await getEventResultsByEvent(parseInt(eventoId))
 
     if (!event) {
         notFound()
@@ -30,7 +32,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
     return (
         <main className="container mx-auto px-4 py-8">
             <Breadcrumbs
-                items={[{ label: "Home", href: "/" }, { label: "Eventos", href: "/events" }, { label: event.name }]}
+                items={[{ label: "Home", href: "/" }, { label: "Eventos", href: "/eventos" }, { label: event.name }]}
             />
 
             {/* Event Header */}
@@ -64,7 +66,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                         <CardContent>
                             <div className="grid md:grid-cols-2 gap-4">
                                 {tournaments.map((tournament) => (
-                                    <Link key={tournament.id} href={`/events/${event.id}/tournaments/${tournament.id}`}>
+                                    <Link key={tournament.id} href={`/eventos/${event.id}/torneios/${tournament.id}`}>
                                         <Card className="hover:shadow-md transition-all hover:border-primary/50">
                                             <CardHeader className="pb-3">
                                                 <div className="flex items-center justify-between mb-2">
@@ -86,7 +88,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                 {/* Event Ranking */}
                 <div>
                     <Card className="sticky top-20">
-                        <Link href={`/events/${event.id}/ranking`}>
+                        <Link href={`/eventos/${event.id}/ranking`}>
                             <CardHeader>
                                 <div className="flex items-center gap-2">
                                     <Medal className="h-5 w-5 text-primary" />
@@ -104,20 +106,20 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                                         <TableHead className="text-right">Pts</TableHead>
                                     </TableRow>
                                 </TableHeader>
-                                {/* <TableBody>
+                                <TableBody>
                                     {eventRanking.map((rank) => (
                                         <TableRow key={rank.position}>
                                             <TableCell className="font-bold">{rank.position}</TableCell>
                                             <TableCell>
-                                                <Link href={`/teams/${rank.team.id}`} className="hover:text-primary transition-colors">
+                                                <Link href={`/atleticas/${rank.team.id}`} className="hover:text-primary transition-colors">
                                                     <div className="font-medium">{rank.team.name}</div>
                                                     <div className="text-xs text-muted-foreground">{rank.team.course}</div>
                                                 </Link>
                                             </TableCell>
-                                            <TableCell className="text-right font-bold">{rank.totalPoints}</TableCell>
+                                            <TableCell className="text-right font-bold">{rank.points}</TableCell>
                                         </TableRow>
                                     ))}
-                                </TableBody> */}
+                                </TableBody>
                             </Table>
                         </CardContent>
                     </Card>

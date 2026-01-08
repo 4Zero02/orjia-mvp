@@ -1,14 +1,18 @@
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { events, getEventRanking, getTournamentsByEventId } from "@/lib/mock-data"
 import { StatusBadge } from "@/components/status-badge"
 import { Trophy, Medal, ArrowRight } from "lucide-react"
+import { getEvents } from "@/data/events"
+import { getTournamentsByEventId } from "@/data/tournaments"
+import { getEventResultsByEvent } from "@/data/eventResult"
 
-export default function HomePage() {
+
+export default async function HomePage() {
+  const events = await getEvents()
   const featuredEvent = events.find((e) => e.status === "ONGOING") || events[0]
-  const eventRanking = getEventRanking(featuredEvent.id).slice(0, 5)
-  const eventTournaments = getTournamentsByEventId(featuredEvent.id)
+  const eventRanking = await getEventResultsByEvent(featuredEvent.id)
+  const eventTournaments = await getTournamentsByEventId(featuredEvent.id)
 
   return (
     <main className="min-h-screen">
@@ -18,24 +22,24 @@ export default function HomePage() {
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-6xl font-bold mb-4 text-balance drop-shadow-lg">{featuredEvent.name}</h1>
             <p className="text-lg md:text-xl text-foreground/90 mb-6 text-pretty drop-shadow-md">
-              {featuredEvent.description}
+              Descricao do evento
             </p>
             <div className="flex items-center gap-4 mb-8">
               <StatusBadge status={featuredEvent.status} />
               <span className="text-sm text-foreground/70">
-                {new Date(featuredEvent.startDate).toLocaleDateString("pt-BR")} - {" "}
-                {new Date(featuredEvent.endDate).toLocaleDateString("pt-BR")}
+                {new Date(featuredEvent.dateStart).toLocaleDateString("pt-BR")} - {" "}
+                {new Date(featuredEvent.dateEnd).toLocaleDateString("pt-BR")}
               </span>
             </div>
             <div className="flex gap-3">
               <Button asChild size="lg">
-                <Link href={`/events/${featuredEvent.id}`}>
+                <Link href={`/eventos/${featuredEvent.id}`}>
                   Ver Detalhes do Evento
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/events">Todos os Eventos</Link>
+                <Link href="/eventos">Todos os Eventos</Link>
               </Button>
             </div>
           </div>
@@ -50,7 +54,7 @@ export default function HomePage() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Trophy className="h-5 w-5 text-primary" />
-                <Link href={`/events/${featuredEvent.id}/ranking`}>
+                <Link href={`/eventos/${featuredEvent.id}/ranking`}>
                   <CardTitle>Ranking Geral do Evento</CardTitle>
                 </Link>
               </div>
@@ -77,7 +81,7 @@ export default function HomePage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-lg">{rank.totalPoints}</div>
+                      <div className="font-bold text-lg">{rank.points}</div>
                       <div className="text-xs text-muted-foreground">pontos</div>
                     </div>
                   </div>
@@ -106,13 +110,13 @@ export default function HomePage() {
                 {eventTournaments.map((tournament) => (
                   <Link
                     key={tournament.id}
-                    href={`/events/${featuredEvent.id}/tournaments/${tournament.id}`}
+                    href={`/eventos/${featuredEvent.id}/torneios/${tournament.id}`}
                     className="block p-4 rounded-lg border bg-card hover:shadow-lg transition-all group"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <h3 className="font-semibold group-hover:text-primary transition-colors">{tournament.name}</h3>
-                        <p className="text-sm text-muted-foreground mt-1">{tournament.sport}</p>
+                        <p className="text-sm text-muted-foreground mt-1">Modalidade</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <StatusBadge status={tournament.status} />

@@ -4,8 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Trophy, Medal } from "lucide-react"
-import { getAtleticaById, getAlteticaParticipations } from "@/data/atleticas"
-// import { getTournamentResultByAtletica } from "@/data/tournamentResult"
+import { getAtleticaById, getAlteticaParticipations, getAtleticaFullPerformance } from "@/data/atleticas"
 
 type AtleticaDetailPageProps = {
     params: {
@@ -25,26 +24,12 @@ export default async function TeamDetailPage({ params }: AtleticaDetailPageProps
     // Busca todos os torneios que participou
     const { participatedEvents, participatedTournaments } = await getAlteticaParticipations(parseInt(atleticaId))
 
-    // Busca o desempenho da atletica em cada evento
-    // const eventPerformance = participatedEvents
-    //     .map((event) => {
-    //         const ranking = eventRankings[event.id]?.find((rank) => rank.team.id === team.id)
-    //     return { event, ranking }
-    // })
-    // .filter((item) => item.ranking)
-
-    // Busca o desempenho da atletica em cada torneio
-    // const tournamentPerformance = participatedTournaments
-    //     .map((tournament) => {
-    //         const ranking = tournamentResult[tournament.id]?.find((rank) => rank.team.id === team.id)
-    //         return { tournament, ranking }
-    //     })
-    //     .filter((item) => item.ranking)
+    const { eventPerformance, tournamentPerformance } = await getAtleticaFullPerformance(atletica.id)
 
     return (
         <main className="container mx-auto px-4 py-8">
             <Breadcrumbs
-                items={[{ label: "Home", href: "/" }, { label: "Atléticas", href: "/teams" }, { label: atletica.name }]}
+                items={[{ label: "Home", href: "/" }, { label: "Atléticas", href: "/atleticas" }, { label: atletica.name }]}
             />
 
             {/* Team Header */}
@@ -81,22 +66,22 @@ export default async function TeamDetailPage({ params }: AtleticaDetailPageProps
                             <CardDescription>Desempenho por modalidade</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="space-y-4">
-                                {participatedTournaments.map((tournament) => {
+                            <div className="space-y-4 space-x-1">
+                                {tournamentPerformance.map(({ tournament, ranking }) => {
                                     const event = participatedEvents.find((e) => e.id === tournament.eventId)
                                     return (
-                                        <Link key={tournament.id} href={`/events/${tournament.eventId}/tournaments/${tournament.id}`}>
+                                        <Link key={tournament.id} href={`/eventos/${tournament.eventId}/torneios/${tournament.id}`}>
                                             <div className="p-4 rounded-lg border bg-card hover:shadow-md transition-all hover:border-primary/50">
                                                 <div className="flex items-start justify-between mb-2">
                                                     <div>
                                                         <h3 className="font-semibold">{tournament.name}</h3>
                                                         <p className="text-sm text-muted-foreground">{event?.name}</p>
                                                     </div>
-                                                    <Badge className="bg-primary/10 text-primary border-primary/30">Posicao no torneio</Badge>
+                                                    <Badge className="bg-primary/10 text-primary border-primary/30">{ranking?.position}</Badge>
                                                 </div>
                                                 <div className="flex items-center gap-4 mt-3 text-sm">
                                                     <div>
-                                                        <span className="font-bold">9</span>
+                                                        <span className="font-bold">{ranking?.points}</span>
                                                         <span className="text-muted-foreground"> pts</span>
                                                     </div>
                                                 </div>
@@ -123,20 +108,20 @@ export default async function TeamDetailPage({ params }: AtleticaDetailPageProps
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4 gap-4">
-                                {participatedEvents.map((event) => (
-                                    <Link key={event.id} href={`/events/${event.id}`}>
+                                {eventPerformance.map(({ event, ranking }) => (
+                                    <Link key={event.id} href={`/eventos/${event.id}`}>
                                         <div className="p-4 rounded-lg border bg-card hover:shadow-md transition-all hover:border-primary/50">
                                             <div className="flex items-start justify-between mb-2">
                                                 <div>
                                                     <h3 className="font-semibold">{event.name}</h3>
                                                     <p className="text-sm text-muted-foreground">{new Date(event.dateStart).getFullYear()}</p>
                                                 </div>
-                                                <Badge className="bg-primary/10 text-primary border-primary/30">Aqui seria a posicao no evento</Badge>
+                                                <Badge className="bg-primary/10 text-primary border-primary/30">{ranking?.position}</Badge>
                                             </div>
                                             <div className="flex items-center gap-4 mt-3">
                                                 <div className="text-sm">
-                                                    <span className="font-bold">9</span>
-                                                    <span className="text-muted-foreground"> - os pontos do evento</span>
+                                                    <span className="font-bold">{ranking?.points}</span>
+                                                    <span className="text-muted-foreground"> pontos</span>
                                                 </div>
                                             </div>
                                         </div>

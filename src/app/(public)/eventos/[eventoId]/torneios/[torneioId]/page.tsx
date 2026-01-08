@@ -6,7 +6,6 @@ import { StatusBadge } from "@/components/status-badge"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Trophy, Calendar } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-// import { getTournamentById, getEventById, getMatchesByTournamentId, getTournamentRanking } from "@/lib/mock-data"
 import { getTournamentById } from "@/data/tournaments"
 import { getEventById } from "@/data/events"
 import { getMatchesByTournament } from "@/data/matches"
@@ -52,8 +51,8 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
             <Breadcrumbs
                 items={[
                     { label: "Home", href: "/" },
-                    { label: "Eventos", href: "/events" },
-                    { label: event.name, href: `/events/${event.id}` },
+                    { label: "Eventos", href: "/eventos" },
+                    { label: event.name, href: `/eventos/${event.id}` },
                     { label: tournament.name },
                 ]}
             />
@@ -66,7 +65,7 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-3">{tournament.name}</h1>
                 <p className="text-muted-foreground">
-                    <Link href={`/events/${event.id}`} className="hover:text-primary transition-colors">
+                    <Link href={`/eventos/${event.id}`} className="hover:text-primary transition-colors">
                         {event.name}
                     </Link>
                 </p>
@@ -96,7 +95,7 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                                     <div className="flex items-center gap-4 flex-1">
                                                         <div className="flex items-center gap-2 flex-1">
                                                             <Link
-                                                                href={`/teams/${match.team1?.id}`}
+                                                                href={`/atleticas/${match.team1?.id}`}
                                                                 className="font-medium hover:text-primary transition-colors"
                                                             >
                                                                 <img src={match.team1?.logo ?? undefined} alt={match.team1?.name} className="h-6 w-6 object-contain mr-1 inline-block" />
@@ -121,7 +120,7 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                                         </div>
                                                         <div className="flex items-center gap-2 flex-1 justify-end">
                                                             <Link
-                                                                href={`/teams/${match.team2?.id}`}
+                                                                href={`/atleticas/${match.team2?.id}`}
                                                                 className="font-medium hover:text-primary transition-colors"
                                                             >
                                                                 {match.team2?.acronym}
@@ -169,7 +168,7 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                         <TableRow key={rank.position}>
                                             <TableCell className="font-bold">{rank.position}</TableCell>
                                             <TableCell>
-                                                <Link href={`/teams/${rank.team.id}`} className="hover:text-primary transition-colors">
+                                                <Link href={`/atleticas/${rank.team.id}`} className="hover:text-primary transition-colors">
                                                     <div className="font-medium">{rank.team.acronym}</div>
                                                 </Link>
                                             </TableCell>

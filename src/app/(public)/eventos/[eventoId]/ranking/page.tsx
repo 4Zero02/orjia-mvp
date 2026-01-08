@@ -1,22 +1,21 @@
 import Link from "next/link"
-import { Navbar } from "@/components/navbar"
 import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Trophy, Medal, ArrowLeft, TrendingUp, TrendingDown, Minus } from "lucide-react"
-import { getEventById, getEventRanking } from "@/lib/mock-data"
+import { Trophy, Medal, ArrowLeft } from "lucide-react"
 import { notFound } from "next/navigation"
+import { getEventById } from "@/data/events"
+import { getEventRanking } from "@/data/eventResult"
 
 type pageProps = {
     params: {
-        id: string
+        eventoId: string
     }
 }
 
 export default async function EventRankingPage({ params }: pageProps) {
-    const { id } = await params
-    const event = await getEventById(id)
-    const eventRanking = getEventRanking(id)
+    const { eventoId } = await params
+    const event = await getEventById(parseInt(eventoId))
+    const eventRanking = await getEventRanking(parseInt(eventoId))
 
     if (!event) {
         notFound()
@@ -25,7 +24,7 @@ export default async function EventRankingPage({ params }: pageProps) {
     return (
         <main className="container mx-auto px-4 py-8">
             <Button asChild variant="ghost" className="mb-6 hover:bg-muted hover:text-foreground">
-                <Link href={`/events/${event.id}`}>
+                <Link href={`/eventos/${event.id}`}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Voltar para Evento
                 </Link>
@@ -41,7 +40,7 @@ export default async function EventRankingPage({ params }: pageProps) {
 
             <div className="mb-8 grid gap-4 md:grid-cols-3">
                 {eventRanking.slice(0, 3).map((teamRank) => (
-                    <Link key={teamRank.position} href={`/teams/${teamRank.team.id}`}>
+                    <Link key={teamRank.position} href={`/atleticas/${teamRank.team.id}`}>
                         <Card
                             key={teamRank.position}
                             className={`relative overflow-hidden bg-card transition-shadow hover:shadow-md ${teamRank.position === 1
@@ -67,7 +66,7 @@ export default async function EventRankingPage({ params }: pageProps) {
                                 </div>
                                 <h3 className="mb-2 text-xl font-bold text-balance text-foreground">{teamRank.team.name}</h3>
                                 <div className="space-y-1">
-                                    <p className="text-3xl font-bold text-primary">{teamRank.totalPoints}</p>
+                                    <p className="text-3xl font-bold text-primary">{teamRank.points}</p>
                                 </div>
                             </div>
                         </Card>
@@ -106,7 +105,7 @@ export default async function EventRankingPage({ params }: pageProps) {
                                     </td>
                                     <td className="px-6 py-4">
                                         <Link
-                                            href={`/times/${teamRank.position}`}
+                                            href={`/atleticas/${teamRank.team.id}`}
                                             className="flex items-center gap-3 hover:text-primary transition-colors"
                                         >
                                             <img
@@ -118,7 +117,7 @@ export default async function EventRankingPage({ params }: pageProps) {
                                         </Link>
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <span className="text-xl font-bold text-foreground">{teamRank.totalPoints.toLocaleString()}</span>
+                                        <span className="text-xl font-bold text-foreground">{teamRank.points.toLocaleString()}</span>
                                     </td>
                                 </tr>
                             ))}
