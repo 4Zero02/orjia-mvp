@@ -32,7 +32,6 @@ export default function RootLayout({
 }>) {
   return (
     <div className={`${_geist.className} font-sans antialiased min-h-screen`}>
-      <Navbar />
       <main>{children}</main>
     </div>
   )

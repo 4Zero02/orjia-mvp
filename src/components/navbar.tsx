@@ -11,13 +11,16 @@ export function Navbar() {
                 </Link>
 
                 <div className="flex items-center gap-6">
+                    <Link href="/admin" className="text-sm font-medium hover:text-primary transition-colors">
+                        Admin Panel
+                    </Link>
                     <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">
                         Home
                     </Link>
-                    <Link href="/events" className="text-sm font-medium hover:text-primary transition-colors">
+                    <Link href="/eventos" className="text-sm font-medium hover:text-primary transition-colors">
                         Eventos
                     </Link>
-                    <Link href="/teams" className="text-sm font-medium hover:text-primary transition-colors">
+                    <Link href="/atleticas" className="text-sm font-medium hover:text-primary transition-colors">
                         Atléticas
                     </Link>
                 </div>

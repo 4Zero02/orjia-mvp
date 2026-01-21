@@ -5,16 +5,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
-import { getAtleticaById } from "@/data/atleticas"
 
-type AtleticaProps = {
-    params: { id: string }
-}
-
-export default async function EditAtleticaPage({ params }: AtleticaProps) {
-    const { id } = await params
-    const atletica = await getAtleticaById(parseInt(id))
-
+export default function NewAtleticaPage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center gap-4">
@@ -24,8 +16,8 @@ export default async function EditAtleticaPage({ params }: AtleticaProps) {
                     </Link>
                 </Button>
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Editar Atlética</h1>
-                    <p className="text-muted-foreground">Atualize as informações da atlética</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Nova Atlética</h1>
+                    <p className="text-muted-foreground">Cadastre uma nova atlética</p>
                 </div>
             </div>
 
@@ -37,26 +29,26 @@ export default async function EditAtleticaPage({ params }: AtleticaProps) {
                     <form className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="name">Nome da Atlética</Label>
-                            <Input id="name" defaultValue={atletica?.name} />
+                            <Input id="name" placeholder="Ex: Atlética FMRP" />
                         </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="university">Universidade</Label>
-                            <Input id="university" defaultValue={atletica?.course ?? ""} />
+                            <Input id="university" placeholder="Ex: USP Ribeirão Preto" />
                         </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="members">Número de Membros</Label>
-                            <Input id="members" type="number" defaultValue={atletica?.instagram ?? ""} />
+                            <Input id="members" type="number" placeholder="150" />
                         </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="description">Descrição</Label>
-                            <Textarea id="description" defaultValue={atletica?.email ?? ""} rows={4} />
+                            <Textarea id="description" placeholder="Descrição sobre a atlética..." rows={4} />
                         </div>
 
                         <div className="flex gap-2">
-                            <Button type="submit">Salvar Alterações</Button>
+                            <Button type="submit">Salvar</Button>
                             <Button variant="outline" asChild>
                                 <Link href="/admin/atleticas">Cancelar</Link>
                             </Button>

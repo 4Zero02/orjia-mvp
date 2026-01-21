@@ -5,80 +5,76 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 import Link from "next/link"
 
-const mockEvents = [
+const mockTournaments = [
     {
         id: "1",
-        name: "InterMed 2024",
-        date: "2024-05-15",
-        location: "Ribeirão Preto",
-        status: "active",
+        name: "Futebol Masculino",
+        event: "InterMed 2024",
+        teams: 8,
+        status: "in_progress",
     },
     {
         id: "2",
-        name: "Copa Universitária",
-        date: "2024-06-20",
-        location: "São Paulo",
-        status: "upcoming",
+        name: "Vôlei Feminino",
+        event: "InterMed 2024",
+        teams: 6,
+        status: "in_progress",
     },
     {
         id: "3",
-        name: "Torneio de Verão",
-        date: "2024-01-10",
-        location: "Campinas",
-        status: "completed",
+        name: "Basquete Masculino",
+        event: "Copa Universitária",
+        teams: 10,
+        status: "scheduled",
     },
 ]
 
-export default function EventsPage() {
+export default function TournamentsPage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Eventos</h1>
-                    <p className="text-muted-foreground">Gerencie os eventos da plataforma</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Torneios</h1>
+                    <p className="text-muted-foreground">Gerencie os torneios dos eventos</p>
                 </div>
                 <Button asChild>
-                    <Link href="/admin/events/new">
+                    <Link href="/admin/tournaments/new">
                         <Plus className="mr-2 h-4 w-4" />
-                        Novo Evento
+                        Novo Torneio
                     </Link>
                 </Button>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Lista de Eventos</CardTitle>
+                    <CardTitle>Lista de Torneios</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Nome</TableHead>
-                                <TableHead>Data</TableHead>
-                                <TableHead>Local</TableHead>
+                                <TableHead>Evento</TableHead>
+                                <TableHead>Times</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead className="text-right">Ações</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {mockEvents.map((event) => (
-                                <TableRow key={event.id}>
-                                    <TableCell className="font-medium">{event.name}</TableCell>
-                                    <TableCell>{new Date(event.date).toLocaleDateString("pt-BR")}</TableCell>
-                                    <TableCell>{event.location}</TableCell>
+                            {mockTournaments.map((tournament) => (
+                                <TableRow key={tournament.id}>
+                                    <TableCell className="font-medium">{tournament.name}</TableCell>
+                                    <TableCell>{tournament.event}</TableCell>
+                                    <TableCell>{tournament.teams} times</TableCell>
                                     <TableCell>
-                                        <Badge
-                                            variant={
-                                                event.status === "active" ? "default" : event.status === "upcoming" ? "secondary" : "outline"
-                                            }
-                                        >
-                                            {event.status === "active" ? "Ativo" : event.status === "upcoming" ? "Próximo" : "Finalizado"}
+                                        <Badge variant={tournament.status === "in_progress" ? "default" : "secondary"}>
+                                            {tournament.status === "in_progress" ? "Em andamento" : "Agendado"}
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
                                             <Button variant="ghost" size="icon" asChild>
-                                                <Link href={`/admin/eventos/${event.id}`}>
+                                                <Link href={`/admin/tournaments/${tournament.id}`}>
                                                     <Pencil className="h-4 w-4" />
                                                 </Link>
                                             </Button>
