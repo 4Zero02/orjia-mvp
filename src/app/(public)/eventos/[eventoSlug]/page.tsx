@@ -86,7 +86,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                 {/* Event Ranking */}
                 <div>
                     <Card className="sticky top-20">
-                        <Link href={`/eventos/${event.id}/ranking`}>
+                        <Link href={`/eventos/${event.slug}/ranking`}>
                             <CardHeader>
                                 <div className="flex items-center gap-2">
                                     <Medal className="h-5 w-5 text-primary" />

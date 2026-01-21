@@ -65,7 +65,7 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-3">{tournament.name}</h1>
                 <p className="text-muted-foreground">
-                    <Link href={`/eventos/${event.id}`} className="hover:text-primary transition-colors">
+                    <Link href={`/eventos/${event.slug}`} className="hover:text-primary transition-colors">
                         {event.name}
                     </Link>
                 </p>
@@ -95,7 +95,7 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                                     <div className="flex items-center gap-4 flex-1">
                                                         <div className="flex items-center gap-2 flex-1">
                                                             <Link
-                                                                href={`/atleticas/${match.team1?.id || ""}`}
+                                                                href={`/atleticas/${match.team1?.slug || ""}`}
                                                                 className="font-medium hover:text-primary transition-colors">
                                                                 <img src={match.team1?.logo || "/logos/liga.png"} alt={match.team1?.name} className="h-6 w-6 object-contain mr-1 inline-block rounded-full" />
                                                                 {match.team1?.acronym}
@@ -116,7 +116,7 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                                         </div>
                                                         <div className="flex items-center gap-2 flex-1 justify-end">
                                                             <Link
-                                                                href={`/atleticas/${match.team2?.id || ""}`}
+                                                                href={`/atleticas/${match.team2?.slug || ""}`}
                                                                 className="font-medium hover:text-primary transition-colors">
                                                                 {match.team2?.acronym}
                                                                 <img src={match.team2?.logo || "/logos/liga.png"} alt={match.team2?.name} className="h-6 w-6 object-contain ml-1 inline-block rounded-full" />

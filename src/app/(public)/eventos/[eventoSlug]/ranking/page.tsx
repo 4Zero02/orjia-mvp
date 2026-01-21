@@ -3,28 +3,28 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Trophy, Medal, ArrowLeft } from "lucide-react"
 import { notFound } from "next/navigation"
-import { getEventById } from "@/data/events"
+import { getEventBySlug } from "@/data/events"
 import { getEventRanking } from "@/data/eventResults"
 
 type pageProps = {
     params: {
-        eventoId: string
+        eventoSlug: string
     }
 }
 
 export default async function EventRankingPage({ params }: pageProps) {
-    const { eventoId } = await params
-    const event = await getEventById(parseInt(eventoId))
-    const eventRanking = await getEventRanking(parseInt(eventoId))
-
+    const { eventoSlug } = await params
+    const event = await getEventBySlug(eventoSlug)
     if (!event) {
         notFound()
     }
 
+    const eventRanking = await getEventRanking(event.id)
+
     return (
         <main className="container mx-auto px-4 py-8">
             <Button asChild variant="ghost" className="mb-6 hover:bg-muted hover:text-foreground">
-                <Link href={`/eventos/${event.id}`}>
+                <Link href={`/eventos/${event.slug}`}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Voltar para Evento
                 </Link>

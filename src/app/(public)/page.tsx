@@ -40,7 +40,7 @@ export default async function HomePage() {
             </div>
             <div className="flex gap-3">
               <Button asChild size="lg">
-                <Link href={`/eventos/${featuredEvent.id}`}>
+                <Link href={`/eventos/${featuredEvent.slug}`}>
                   Ver Detalhes do Evento
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -95,7 +95,7 @@ export default async function HomePage() {
                 ))}
               </div>
               <Button asChild variant="ghost" className="w-full mt-4">
-                <Link href={`/eventos/${featuredEvent.id}/ranking`}>
+                <Link href={`/eventos/${featuredEvent.slug}/ranking`}>
                   Ver Ranking Completo
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
