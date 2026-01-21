@@ -18,7 +18,7 @@ export default async function EventsPage() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {events.map((event) => (
-                    <Link key={event.id} href={`/eventos/${event.id}`}>
+                    <Link key={event.id} href={`/eventos/${event.slug}`}>
                         <Card className="h-full hover:shadow-lg transition-all hover:border-primary/50">
                             <CardHeader>
                                 <div className="flex items-start justify-between mb-2">

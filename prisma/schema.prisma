@@ -7,68 +7,99 @@ datasource db {
   provider = "postgresql"
 }
 
-enum StatusTime {
-  PLANNING
-  UPCOMING
-  ACTIVE
-  COMPLETED
-  ONGOING
-  FINISHED
-  SCHEDULED
+// Status unificado e organizado por fluxo
+enum Status {
+  DRAFT // Rascunho/Planejamento
+  SCHEDULED // Agendado
+  ONGOING // Em andamento
+  FINISHED // Finalizado
+  CANCELLED // Cancelado
 }
 
-// crie um enum com os rounds para as partidas
+// Rounds das partidas
 enum MatchRound {
-  PRELIMINAR
-  OITAVAS
-  QUARTAS
-  SEMI
-  TERCEIRO_LUGAR
-  FINAL
-  DESEMPATE_7_8
-  DESEMPATE_5_6
+  GRUPOS // Fase de grupos
+  OITAVAS // Oitavas de final
+  QUARTAS // Quartas de final
+  SEMIFINAL // Semifinal
+  TERCEIRO_LUGAR // Disputa de terceiro lugar
+  FINAL // Final
+  DESEMPATE_7_8 // Desempate 7º e 8º lugar
+  DESEMPATE_5_6 // Desempate 5º e 6º lugar
+}
+
+enum TournamentGender {
+  M
+  F
+  MISTO
 }
 
 model Event {
-  id        Int        @id @default(autoincrement())
-  name      String
-  year      Int
-  dateStart DateTime
-  dateEnd   DateTime
-  status    StatusTime // planning | upcoming | active | completed
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique // Para URLs amigáveis
+  description String?
+  year        Int
+  dateStart   DateTime
+  dateEnd     DateTime
+  status      Status   @default(DRAFT)
+
+  // Configurações visuais
+  banner String?
+  logo   String?
 
   tournaments Tournament[]
   results     EventResult[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([year, status])
+  @@index([slug])
 }
 
 model Tournament {
-  id          Int        @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
+  slug        String // Slug único dentro do evento
   description String?
-  status      StatusTime // upcoming | ongoing | finished
+  status      Status  @default(DRAFT)
+
+  // Configurações do torneio
+  gender TournamentGender? // "M", "F", "MISTO"
+  // maxTeams Int? // Número máximo de equipes
+  // format   String? // "ELIMINATORIA", "GRUPOS", "PONTOS_CORRIDOS"
 
   eventId Int
   event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
+  // teams   TournamentTeam[] // Times participantes
   matches Match[]
   results TournamentResult[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([eventId, slug])
+  @@index([eventId, status])
 }
 
 model Atletica {
-  id        Int     @id @default(autoincrement())
-  name      String
-  acronym   String?
-  course    String?
+  id      Int     @id @default(autoincrement())
+  name    String
+  slug    String  @unique // Para URLs amigáveis
+  acronym String?
+  course  String?
+
+  // Contatos
   email     String?
   instagram String?
-  logo      String?
 
+  // Identidade visual
+  logo String?
+
+  // Relações
+  // tournaments  TournamentTeam[]
   results      TournamentResult[]
   eventResults EventResult[]
 
@@ -77,46 +108,84 @@ model Atletica {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([name])
+  @@index([slug])
 }
+
+// Relação N:N entre Tournament e Atletica
+// model TournamentTeam {
+//   id           Int @id @default(autoincrement())
+//   tournamentId Int
+//   atleticaId   Int
+
+//   tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+//   atletica   Atletica   @relation(fields: [atleticaId], references: [id], onDelete: Cascade)
+
+//   // Dados específicos da participação
+//   group        String? // "A", "B", "C" para fase de grupos
+//   seed         Int? // Cabeça de chave
+//   registeredAt DateTime @default(now())
+//   confirmed    Boolean  @default(false)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@unique([tournamentId, atleticaId])
+//   @@index([tournamentId])
+//   @@index([atleticaId])
+// }
 
 model TournamentResult {
   id           Int @id @default(autoincrement())
   tournamentId Int
-  teamId       Int
+  atleticaId   Int
 
   tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
-  team       Atletica   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  atletica   Atletica   @relation(fields: [atleticaId], references: [id], onDelete: Cascade)
 
-  position Int? // 1–8 apenas para top 8
-  points   Int // 20–8 ou 1
+  position Int? // Colocação final
+  points   Int  @default(0) // Pontuação obtida
+
+  // Estatísticas adicionais
+  wins   Int @default(0)
+  draws  Int @default(0)
+  losses Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([tournamentId, teamId])
+  @@unique([tournamentId, atleticaId])
   @@unique([tournamentId, position])
   @@index([tournamentId])
-  @@index([teamId])
+  @@index([atleticaId])
+  @@index([tournamentId, position])
 }
 
 model EventResult {
-  id      Int @id @default(autoincrement())
-  eventId Int
-  teamId  Int
+  id         Int @id @default(autoincrement())
+  eventId    Int
+  atleticaId Int
 
-  event Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  team  Atletica @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  event    Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  atletica Atletica @relation(fields: [atleticaId], references: [id], onDelete: Cascade)
 
-  position Int // pra todos os participantes
-  points   Int // pontucação geral
+  position Int // Colocação geral no evento
+  points   Int @default(0) // Pontuação geral acumulada
+
+  // Medalhas conquistadas
+  goldMedals   Int @default(0)
+  silverMedals Int @default(0)
+  bronzeMedals Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([eventId, teamId])
+  @@unique([eventId, atleticaId])
   @@unique([eventId, position])
   @@index([eventId])
-  @@index([teamId])
+  @@index([atleticaId])
+  @@index([eventId, position])
 }
 
 model Match {
@@ -124,21 +193,41 @@ model Match {
   tournamentId Int
   tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
 
+  // Times (podem ser nulos em partidas futuras)
   team1Id Int?
   team2Id Int?
   team1   Atletica? @relation("Team1Matches", fields: [team1Id], references: [id])
   team2   Atletica? @relation("Team2Matches", fields: [team2Id], references: [id])
 
-  scoreTeam1  Int?
-  scoreTeam2  Int?
+  // Placar
+  scoreTeam1 Int?
+  scoreTeam2 Int?
+
+  // Informações da partida
   round       MatchRound
-  status      StatusTime // scheduled | finished
+  matchNumber Int? // Número da partida (ex: Jogo 1, Jogo 2)
+  group       String? // Grupo (se fase de grupos)
+  status      Status     @default(SCHEDULED)
+
+  // Agendamento
   scheduledAt DateTime
+  startedAt   DateTime? // Horário real de início
+  finishedAt  DateTime? // Horário real de término
+
+  // Local
+  venue   String? // Nome do local
+  field   String? // Quadra/Campo específico
+  address String?
+
+  // Observações
+  notes String? // WO, observações especiais, etc
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([tournamentId])
+  @@index([tournamentId, round])
+  @@index([tournamentId, status])
   @@index([team1Id])
   @@index([team2Id])
+  @@index([scheduledAt])
 }

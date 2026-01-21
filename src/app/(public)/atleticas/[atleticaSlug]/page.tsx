@@ -4,17 +4,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Trophy, Medal } from "lucide-react"
-import { getAtleticaById, getAlteticaParticipations, getAtleticaFullPerformance } from "@/data/atleticas"
+import { getAtleticaBySlug, getAlteticaParticipations, getAtleticaFullPerformance } from "@/data/atleticas"
 
 type AtleticaDetailPageProps = {
     params: {
-        atleticaId: string
+        atleticaSlug: string
     }
 }
 
 export default async function TeamDetailPage({ params }: AtleticaDetailPageProps) {
-    const { atleticaId } = await params
-    const atletica = await getAtleticaById(parseInt(atleticaId))
+    const { atleticaSlug } = await params
+    const atletica = await getAtleticaBySlug(atleticaSlug)
 
     if (!atletica) {
         notFound()
@@ -22,7 +22,7 @@ export default async function TeamDetailPage({ params }: AtleticaDetailPageProps
 
     // Busca todos os eventos que a atletica participou
     // Busca todos os torneios que participou
-    const { participatedEvents, participatedTournaments } = await getAlteticaParticipations(parseInt(atleticaId))
+    const { participatedEvents, participatedTournaments } = await getAlteticaParticipations(atletica.id)
 
     const { eventPerformance, tournamentPerformance } = await getAtleticaFullPerformance(atletica.id)
 

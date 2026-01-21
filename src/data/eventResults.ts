@@ -18,7 +18,7 @@ export async function getEventResultsByEvent(eventId: number) {
             eventId,
         },
         include: {
-            team: true,
+            atletica: true,
         },
         orderBy: {
             position: "asc",
@@ -30,16 +30,16 @@ export async function getEventRanking(eventId: number) {
     const results = await getEventResultsByEvent(eventId);
     return results.map(result => ({
         position: result.position,
-        team: result.team,
+        atletica: result.atletica,
         points: result.points,
     }));
 }
 
-export async function getEventResultByAtletica(eventId: number, teamId: number) {
+export async function getEventResultByAtletica(eventId: number, atleticaId: number) {
     return prisma.eventResult.findFirst({
         where: {
             eventId,
-            teamId,
+            atleticaId,
         },
     });
 }

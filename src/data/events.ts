@@ -16,6 +16,14 @@ export async function getEventById(eventId: number) {
   });
 }
 
+export async function getEventBySlug(eventSlug: string) {
+  return prisma.event.findUnique({
+    where: {
+      slug: eventSlug,
+    },
+  });
+}
+
 export async function getTournamentsByEventId(eventId: number) {
   return prisma.tournament.findMany({
     where: {

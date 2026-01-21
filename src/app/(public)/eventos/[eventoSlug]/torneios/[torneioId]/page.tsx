@@ -95,17 +95,14 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                                     <div className="flex items-center gap-4 flex-1">
                                                         <div className="flex items-center gap-2 flex-1">
                                                             <Link
-                                                                href={`/atleticas/${match.team1?.id}`}
-                                                                className="font-medium hover:text-primary transition-colors"
-                                                            >
-                                                                <img src={match.team1?.logo ?? undefined} alt={match.team1?.name} className="h-6 w-6 object-contain mr-1 inline-block" />
+                                                                href={`/atleticas/${match.team1?.id || ""}`}
+                                                                className="font-medium hover:text-primary transition-colors">
+                                                                <img src={match.team1?.logo || "/logos/liga.png"} alt={match.team1?.name} className="h-6 w-6 object-contain mr-1 inline-block rounded-full" />
                                                                 {match.team1?.acronym}
                                                             </Link>
                                                         </div>
                                                         <div className="flex items-center justify-center gap-4">
-                                                            <span
-                                                                className={`text-4xl font-bold`}
-                                                            >
+                                                            <span className={`text-4xl font-bold`}>
                                                                 {match.scoreTeam1 !== null && <span className="text-xl font-bold">{match.scoreTeam1}</span>}
                                                             </span>
                                                             <span className="text-2xl mt-3 text-muted-foreground"> - </span>
@@ -113,18 +110,16 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                                                 className={`text-4xl font-bold ${match.scoreTeam2 !== null && match.scoreTeam2 > (match.scoreTeam1 || 0)
                                                                     ? "text-primary"
                                                                     : "text-foreground"
-                                                                    }`}
-                                                            >
+                                                                    }`}>
                                                                 {match.scoreTeam2 !== null && <span className="text-xl font-bold">{match.scoreTeam2}</span>}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center gap-2 flex-1 justify-end">
                                                             <Link
-                                                                href={`/atleticas/${match.team2?.id}`}
-                                                                className="font-medium hover:text-primary transition-colors"
-                                                            >
+                                                                href={`/atleticas/${match.team2?.id || ""}`}
+                                                                className="font-medium hover:text-primary transition-colors">
                                                                 {match.team2?.acronym}
-                                                                <img src={match.team2?.logo ?? undefined} alt={match.team2?.name} className="h-6 w-6 object-contain ml-1 inline-block" />
+                                                                <img src={match.team2?.logo || "/logos/liga.png"} alt={match.team2?.name} className="h-6 w-6 object-contain ml-1 inline-block rounded-full" />
                                                             </Link>
                                                         </div>
                                                     </div>
@@ -168,8 +163,8 @@ export default async function TournamentDetailPage({ params }: TournamentDetailP
                                         <TableRow key={rank.position}>
                                             <TableCell className="font-bold">{rank.position}</TableCell>
                                             <TableCell>
-                                                <Link href={`/atleticas/${rank.team.id}`} className="hover:text-primary transition-colors">
-                                                    <div className="font-medium">{rank.team.acronym}</div>
+                                                <Link href={`/atleticas/${rank.atleticaId}`} className="hover:text-primary transition-colors">
+                                                    <div className="font-medium">{rank.atletica.acronym}</div>
                                                 </Link>
                                             </TableCell>
                                             <TableCell className="text-right font-bold">{rank.points}</TableCell>

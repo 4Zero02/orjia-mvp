@@ -12,6 +12,14 @@ export async function getAtleticaById(atleticaId: number) {
     });
 }
 
+export async function getAtleticaBySlug(atleticaSlug: string) {
+    return prisma.atletica.findUnique({
+        where: {
+            slug: atleticaSlug,
+        },
+    });
+}   
+
 export async function getAlteticaParticipations(atleticaId: number) {
     const participatedEvents = await prisma.event.findMany({
         where: {
@@ -19,7 +27,7 @@ export async function getAlteticaParticipations(atleticaId: number) {
                 some: {
                     results: {
                         some: {
-                            teamId: atleticaId,
+                            atleticaId: atleticaId,
                         },
                     },
                 },
@@ -30,14 +38,14 @@ export async function getAlteticaParticipations(atleticaId: number) {
                 where: {
                     results: {
                         some: {
-                            teamId: atleticaId,
+                            atleticaId: atleticaId,
                         },
                     },
                 },
                 include: {
                     results: {
                         where: {
-                            teamId: atleticaId,
+                            atleticaId: atleticaId,
                         },
                     },
                 },
@@ -58,7 +66,7 @@ export async function getParticipatedEvents(atleticaId: number) {
                 some: {
                     results: {
                         some: {
-                            teamId: atleticaId,
+                            atleticaId: atleticaId,
                         },
                     },
                 },
@@ -69,14 +77,14 @@ export async function getParticipatedEvents(atleticaId: number) {
                 where: {
                     results: {
                         some: {
-                            teamId: atleticaId,
+                            atleticaId: atleticaId,
                         },
                     },
                 },
                 include: {
                     results: {
                         where: {
-                            teamId: atleticaId,
+                            atleticaId: atleticaId,
                         },
                     },
                 },
@@ -90,7 +98,7 @@ export async function getParticipatedTournaments(atleticaId: number) {
         where: {
             results: {
                 some: {
-                    teamId: atleticaId,
+                    atleticaId: atleticaId,
                 },
             },
         },
@@ -98,7 +106,7 @@ export async function getParticipatedTournaments(atleticaId: number) {
             event: true, // Adiciona informação do evento
             results: {
                 where: {
-                    teamId: atleticaId,
+                    atleticaId: atleticaId,
                 },
             },
         },
@@ -110,12 +118,12 @@ export async function getAtleticaFullPerformance(atleticaId: number) {
         prisma.event.findMany({
             where: {
                 results: {
-                    some: { teamId: atleticaId }
+                    some: { atleticaId: atleticaId }
                 }
             },
             include: {
                 results: {
-                    where: { teamId: atleticaId }
+                    where: { atleticaId: atleticaId }
                 }
             }
         }),
@@ -123,12 +131,12 @@ export async function getAtleticaFullPerformance(atleticaId: number) {
         prisma.tournament.findMany({
             where: {
                 results: {
-                    some: { teamId: atleticaId }
+                    some: { atleticaId: atleticaId }
                 }
             },
             include: {
                 results: {
-                    where: { teamId: atleticaId }
+                    where: { atleticaId: atleticaId }
                 },
                 event: {
                     select: {

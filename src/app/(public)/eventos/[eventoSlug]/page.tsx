@@ -6,26 +6,24 @@ import { StatusBadge } from "@/components/status-badge"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Trophy, Calendar, Medal } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { getEventById } from "@/data/events"
+import { getEventBySlug } from "@/data/events"
 import { getTournamentsByEventId } from "@/data/tournaments"
-import { getEventResultsByEvent } from "@/data/eventResult"
-import { parse } from "path"
+import { getEventResultsByEvent } from "@/data/eventResults"
 
 type EventDetailPageProps = {
     params: {
-        eventoId: string
+        eventoSlug: string
     }
 }
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
-    const { eventoId } = await params
-    const event = await getEventById(parseInt(eventoId))
-    const eventRanking = await getEventResultsByEvent(parseInt(eventoId))
-
+    const { eventoSlug } = await params
+    const event = await getEventBySlug(eventoSlug)
     if (!event) {
         notFound()
     }
 
+    const eventRanking = await getEventResultsByEvent(event.id)
     const tournaments = await getTournamentsByEventId(event.id)
     // const eventRanking = getEventRanking(event.id)
 
@@ -111,9 +109,9 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                                         <TableRow key={rank.position}>
                                             <TableCell className="font-bold">{rank.position}</TableCell>
                                             <TableCell>
-                                                <Link href={`/atleticas/${rank.team.id}`} className="hover:text-primary transition-colors">
-                                                    <div className="font-medium">{rank.team.name}</div>
-                                                    <div className="text-xs text-muted-foreground">{rank.team.course}</div>
+                                                <Link href={`/atleticas/${rank.atleticaId}`} className="hover:text-primary transition-colors">
+                                                    <div className="font-medium">{rank.atletica.name}</div>
+                                                    <div className="text-xs text-muted-foreground">{rank.atletica.course}</div>
                                                 </Link>
                                             </TableCell>
                                             <TableCell className="text-right font-bold">{rank.points}</TableCell>

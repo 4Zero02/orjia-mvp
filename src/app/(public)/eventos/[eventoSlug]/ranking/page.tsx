@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Trophy, Medal, ArrowLeft } from "lucide-react"
 import { notFound } from "next/navigation"
 import { getEventById } from "@/data/events"
-import { getEventRanking } from "@/data/eventResult"
+import { getEventRanking } from "@/data/eventResults"
 
 type pageProps = {
     params: {
@@ -40,7 +40,7 @@ export default async function EventRankingPage({ params }: pageProps) {
 
             <div className="mb-8 grid gap-4 md:grid-cols-3">
                 {eventRanking.slice(0, 3).map((teamRank) => (
-                    <Link key={teamRank.position} href={`/atleticas/${teamRank.team.id}`}>
+                    <Link key={teamRank.position} href={`/atleticas/${teamRank.atletica.id}`}>
                         <Card
                             key={teamRank.position}
                             className={`relative overflow-hidden bg-card transition-shadow hover:shadow-md ${teamRank.position === 1
@@ -48,8 +48,7 @@ export default async function EventRankingPage({ params }: pageProps) {
                                 : teamRank.position === 3
                                     ? "border-[#B5521E] border-2"
                                     : "border-border"
-                                }`}
-                        >
+                                }`}>
                             <div className="p-6">
                                 <div className="mb-4 flex items-start justify-between">
                                     <div className="flex items-center gap-3">
@@ -59,12 +58,12 @@ export default async function EventRankingPage({ params }: pageProps) {
                                         <span className="text-2xl font-bold text-foreground">#{teamRank.position}</span>
                                     </div>
                                     <img
-                                        src={teamRank.team.logo || "/placeholder.svg"}
-                                        alt={teamRank.team.name}
+                                        src={teamRank.atletica.logo || "logos/liga.png"}
+                                        alt={teamRank.atletica.name}
                                         className="h-12 w-12 rounded-full border-2 border-border"
                                     />
                                 </div>
-                                <h3 className="mb-2 text-xl font-bold text-balance text-foreground">{teamRank.team.name}</h3>
+                                <h3 className="mb-2 text-xl font-bold text-balance text-foreground">{teamRank.atletica.name}</h3>
                                 <div className="space-y-1">
                                     <p className="text-3xl font-bold text-primary">{teamRank.points}</p>
                                 </div>
@@ -97,23 +96,20 @@ export default async function EventRankingPage({ params }: pageProps) {
                                                         : teamRank.position === 3
                                                             ? "bg-[#B5521E] text-white"
                                                             : "bg-muted text-muted-foreground"
-                                                    }`}
-                                            >
+                                                    }`}>
                                                 {teamRank.position}
                                             </span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <Link
-                                            href={`/atleticas/${teamRank.team.id}`}
-                                            className="flex items-center gap-3 hover:text-primary transition-colors"
-                                        >
+                                            href={`/atleticas/${teamRank.atletica.id}`}
+                                            className="flex items-center gap-3 hover:text-primary transition-colors">
                                             <img
-                                                src={teamRank.team.logo || "/placeholder.svg"}
-                                                alt={teamRank.team.name}
-                                                className="h-10 w-10 rounded-full border-2 border-border"
-                                            />
-                                            <span className="font-medium text-foreground">{teamRank.team.name}</span>
+                                                src={teamRank.atletica.logo || "/placeholder.svg"}
+                                                alt={teamRank.atletica.name}
+                                                className="h-10 w-10 rounded-full border-2 border-border" />
+                                            <span className="font-medium text-foreground">{teamRank.atletica.name}</span>
                                         </Link>
                                     </td>
                                     <td className="px-6 py-4 text-right">

@@ -5,12 +5,19 @@ import { StatusBadge } from "@/components/status-badge"
 import { Trophy, Medal, ArrowRight } from "lucide-react"
 import { getEvents } from "@/data/events"
 import { getTournamentsByEventId } from "@/data/tournaments"
-import { getEventResultsByEvent } from "@/data/eventResult"
+import { getEventResultsByEvent } from "@/data/eventResults"
 
 
 export default async function HomePage() {
   const events = await getEvents()
   const featuredEvent = events.find((e) => e.status === "ONGOING") || events[0]
+  if (!featuredEvent) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-2xl text-center">Nenhum evento disponível no momento.</p>
+      </main>
+    )
+  }
   const eventRanking = await getEventResultsByEvent(featuredEvent.id)
   const eventTournaments = await getTournamentsByEventId(featuredEvent.id)
 
@@ -73,10 +80,10 @@ export default async function HomePage() {
                       </div>
                       <div>
                         <Link
-                          href={`/teams/${rank.team.id}`}
+                          href={`/atleticas/${rank.atletica.slug}`}
                           className="font-semibold hover:text-primary transition-colors"
                         >
-                          {rank.team.name}
+                          {rank.atletica.name}
                         </Link>
                       </div>
                     </div>
@@ -88,7 +95,7 @@ export default async function HomePage() {
                 ))}
               </div>
               <Button asChild variant="ghost" className="w-full mt-4">
-                <Link href={`/events/${featuredEvent.id}`}>
+                <Link href={`/eventos/${featuredEvent.id}/ranking`}>
                   Ver Ranking Completo
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

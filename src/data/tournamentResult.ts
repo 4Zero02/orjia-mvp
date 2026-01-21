@@ -17,6 +17,9 @@ export async function getTournamentResultsByTournament(tournamentId: number) {
         where: {
             tournamentId,
         },
+        include: {
+            atletica: true,
+        },
         orderBy: {
             position: "asc",
         },
@@ -33,11 +36,11 @@ export async function getTournamentResultsByTournament(tournamentId: number) {
 //     }));
 // }
 
-export async function getTournamentResultByAtletica(tournamentId: number, teamId: number) {
+export async function getTournamentResultByAtletica(tournamentId: number, atleticaId: number) {
     return prisma.tournamentResult.findFirst({
         where: {
             tournamentId,
-            teamId,
+            atleticaId,
         },
     });
 }
